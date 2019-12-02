@@ -1,18 +1,53 @@
 import React from 'react'
-import Radium from 'radium'
-import './Car.css'
+// import Radium from 'radium'
+import classes from './Car.css'
 
-const Car = (props) => { 
-  const inputClasses = ['input']
-
-  if(props.name !== '') { 
-    inputClasses.push('green')
-  } else { 
-    inputClasses.push('red')
+class Car extends React.Component {
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    console.log('App componentWillReceiveProps', nextProps) 
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('App shouldComponentUpdate', nextProps, nextState)
+    return nextProps.name.trim() !== this.props.name.trim() 
+  }
+  UNSAFE_componentWillUpdate(nextProps, nextState) {
+    console.log('App shouldComponentUpdate', nextProps, nextState) 
   }
 
-  if (props.name.length > 4) {
-    inputClasses.push('bold') 
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   console.log('Car getDerivedStateFromProps',nextProps, prevState)
+
+  //   return prevState
+  // }
+
+  componentDidUpdate() {
+    console.log('App componentDidUpdate') 
+  }
+  // getSnapshotBeforeUpdate() {
+  //   console.log('Car getSnapShotBeforeUpdate') 
+  // }
+
+  componentWillUnmount() {
+    console.log('Car componentWillUnmount') 
+  }
+
+  render () {
+    console.log('Car render')
+
+    if (Math.random() > 0.7) {
+      throw new Error('Car random failed')
+    }
+    
+    const inputClasses = [classes.input]
+
+  if(this.props.name !== '') { 
+    inputClasses.push(classes.green)
+  } else { 
+    inputClasses.push(classes.red)
+  }
+
+  if (this.props.name.length > 4) {
+    inputClasses.push(classes.bold) 
   }
 
   const style = {
@@ -27,18 +62,20 @@ const Car = (props) => {
   }
 
   return (
-    <div className="Car" style={style}>
-      <h3>Car name: {props.name}</h3>
-      <p>Year: <strong>{props.year}</strong></p>
+    <div className={classes.Car } style={style}>
+      <h3>Car name: {this.props.name}</h3>
+      <p>Year: <strong>{this.props.year}</strong></p>
       <input 
         type="text" 
-        onChange={props.onChangeName} 
-        value={props.name}
+        onChange={this.props.onChangeName} 
+        value={this.props.name}
         className={inputClasses.join(' ')}
       />
-      <button onClick={props.onDelete}>Delete</button>
+      <button onClick={this.props.onDelete}>Delete</button>
     </div>
   )
+
+  }
 }
 
-export default Radium(Car)
+export default Car
